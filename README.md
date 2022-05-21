@@ -9,7 +9,8 @@
 
 Made with React and TailwindCSS
 
-https://user-images.githubusercontent.com/67150257/169641144-ed7afa44-213c-43c6-9656-cbe34e4200fc.mp4
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/67150257/169642064-bd57fd4f-593a-4227-a062-8a38527be7e8.gif)
+
 
 Made with 💘
 
