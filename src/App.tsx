@@ -1,6 +1,6 @@
 import { useAxios, useLocalStorage } from './Hooks'
 
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 
 import { UNSPLASH_API } from './Urls/index'
 
@@ -18,25 +18,55 @@ import {
 	Focus,
 } from './Components'
 
+interface urlType{
+	full: string;
+	raw: string;
+	regular: string;
+	small: string;
+	small_s3: string;
+	thumb: string;	
+}
+
+interface fetchedImageType extends urlType{
+	id: string;
+}
+
+
+interface ResultType{
+	urls: urlType;
+}
+
+interface ResponseType {
+	results: ResultType[];
+}
+
 export default function App() {
-	const [selectedImage, setSelectedImage] = useLocalStorage(
+	const [selectImage, setSelectImage] = useLocalStorage(
 		'selectedImage',
 		''
 	)
-	const [nebulaImages, setNebulaImages] = useState([])
+
+	const selectedImage  = selectImage as unknown as fetchedImageType
+
+	const setSelectedImage = setSelectImage as unknown as React.Dispatch<SetStateAction<fetchedImageType>>
+
+	const [nebulaImages, setNebulaImages] = useState<fetchedImageType[]>([])
 
 	const [displayHeader, setDisplayHeader] = useState(true)
 
-	const [response, loading, error] = useAxios({
+	const [res, loading, error] = useAxios({
 		method: 'get',
 		url: UNSPLASH_API,
 	})
+
+	const response = res as ResponseType
 
 	useEffect(() => {
 		const fetchedImages = response?.results?.map(img => ({
 			...img.urls,
 			id: uuid(),
 		}))
+
 
 		if (!selectedImage) {
 			setSelectedImage(fetchedImages?.[0])
@@ -46,7 +76,7 @@ export default function App() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [response])
 
-	const clickImgHandler = img => {
+	const clickImgHandler = (img: fetchedImageType) => {
 		if (img.id === selectedImage.id) {
 			return null
 		}
@@ -99,12 +129,11 @@ export default function App() {
 							<DateTime />
 						</div>
 
-						<div className='flex flex-col items-end w-1/2 h-full'>
-							<div>
+						<div className='flex flex-col items-end w-1/2 h-full justify-between'>
+							<div className='h-3/4 w-full flex flex-col items-end'>
 								<TeenyiconsMenuSolid
 									width='1.5rem'
 									height='1.5rem'
-									pathfill='white'
 									className='mt-5 mr-5  cursor-pointer'
 									onClick={() => setDisplayHeader(prev => !prev)}
 								/>
@@ -114,7 +143,7 @@ export default function App() {
 								<Todos />
 							</div>
 
-							<div className='text-white text-xl mt-auto mr-2 self-end mb-4 grid'>
+							<div className='text-white text-xl mt-auto mr-2 self-end  grid h-1/4'>
 								<Focus />
 
 								<Quotes />

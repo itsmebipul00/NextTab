@@ -6,9 +6,14 @@ import { useState, useEffect } from 'react'
  * @returns current latitude and longitude
  *
  */
+interface GeoLocation {
+	latitude: string  | number;
+	longitude: string | number;
+}
+
 
 export const useGeoLocation = () => {
-	const [geoArea, setGeoArea] = useState({
+	const [geoArea, setGeoArea] = useState<GeoLocation>({
 		latitude: 0,
 		longitude: 0,
 	})
